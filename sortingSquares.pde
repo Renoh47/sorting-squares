@@ -1,5 +1,5 @@
 // Parameters
-final int SQUARE_COUNT          = 100;
+final int SQUARE_COUNT          = 50;
 final int FADE_COUNT            = 10;
 final int MIN_SQUARE_SIZE       = 3;
 final int MAX_SQUARE_SIZE       = 100;
@@ -7,7 +7,7 @@ final int OPACITY               = 180; // 0 transparent, 255 no opacity
 final int DELAY_BETWEEN_FRAMES  = 0; // Delay between animation frames, in millis
 final boolean DRAW_SWAPS        = true;
 
-// Implemented: "INSERTION_SORT"
+// Implemented: "INSERTION_SORT", "BUBBLE_SORT_1", "BUBBLE_SORT_2"
 final String ALGORITHM = "INSERTION_SORT";
 
 float circleWidth;
@@ -19,11 +19,11 @@ SortableSquare[] sortableSquares;
 ArrayList<SortableSquare[]> ssHistory;
 
 void setup() {
-  size(100,1200); 
+  size(800, 800); 
   background(255);
   rectMode(CENTER);
   textAlign(CENTER);
-  textSize(24);
+  
  
   circleWidth = width / 3 * 2;
   circleRadius = circleWidth / 2;
@@ -45,7 +45,10 @@ void draw() {
       rect(pos.x, pos.y, size, size);
       noStroke();
       fill(180);
+      textSize(24);
       text(currentFrame + 1, width / 2, height / 2);
+      textSize(16);
+      text("comparisons", width/2, height/2 + 25);
     }
     currentFrame++;
   } 
@@ -68,8 +71,11 @@ void initSquares() {
 // Sort the SortableSquare array with the sorting algorithm defined in ALGORITHM.
 void sortSquares(SortableSquare[] sortableSquares) {
   switch(ALGORITHM) {
-    case "BUBBLE_SORT":
-      println("Bubble sort");
+    case "BUBBLE_SORT_1":
+      bubbleSort1(sortableSquares);
+      break;
+    case "BUBBLE_SORT_2":
+      bubbleSort2(sortableSquares);
       break;
     case "INSERTION_SORT":
       insertionSort(sortableSquares);
@@ -83,7 +89,7 @@ void sortSquares(SortableSquare[] sortableSquares) {
   }
 }
 
-// Sorts the SortableSquare array using Insertion Sort.
+// Sorts the SortableSquare array using insertion sort.
 // Stores every state of sortableSquares in ssHistory as it is sorted. 
 void insertionSort(SortableSquare[] sortableSquares) {
   ssHistory = new ArrayList<SortableSquare[]>();
@@ -102,6 +108,41 @@ void insertionSort(SortableSquare[] sortableSquares) {
       }
     }
     ssHistory.add(copyAndCircularizeArray(sortableSquares));
+  }
+}
+
+// Bubble sort implementation using two for loops.
+void bubbleSort1(SortableSquare[] sortableSquares) {
+  ssHistory = new ArrayList<SortableSquare[]>();
+  ssHistory.add(copyAndCircularizeArray(sortableSquares));
+  for(int i = 0; i < SQUARE_COUNT-1; i++) {
+    for(int j = 0; j < SQUARE_COUNT-i-1; j++) {
+      if(sortableSquares[j].compareTo(sortableSquares[j+1]) > 0) {
+        SortableSquare temp = sortableSquares[j+1];
+        sortableSquares[j+1] = sortableSquares[j];
+        sortableSquares[j] = temp;
+      }
+      ssHistory.add(copyAndCircularizeArray(sortableSquares));
+    }
+  }
+}
+
+// Bubble sort implementation using a while and a for loop.
+void bubbleSort2(SortableSquare[] sortableSquares) {
+  ssHistory = new ArrayList<SortableSquare[]>();
+  ssHistory.add(copyAndCircularizeArray(sortableSquares));
+  boolean isSorted = false;
+  while(!isSorted) {
+    isSorted = true;
+    for(int i = 0; i < SQUARE_COUNT-1; i++) {
+      if(sortableSquares[i].compareTo(sortableSquares[i+1]) > 0) {
+        SortableSquare temp = sortableSquares[i+1];
+        sortableSquares[i+1] = sortableSquares[i];
+        sortableSquares[i] = temp;
+        isSorted = false;
+      }
+      ssHistory.add(copyAndCircularizeArray(sortableSquares));
+    }
   }
 }
 
@@ -152,9 +193,9 @@ private class SortableSquare implements Comparable<SortableSquare> {
     this.opacity = copySquare.opacity;
     this.pos = new PVector(copySquare.pos.x, copySquare.pos.y);
   }
-  
-  // Returns a negative value when other is larger than self.
-  // Similarly, returns a positive value when other is smaller than self.
+
+  // Returns a positive value when self is larger than other.
+  // Similarly, returns a negative value when self is smaller than other.
   int compareTo(SortableSquare other) {
     int result = this.getSize() - other.getSize();
     return result;
