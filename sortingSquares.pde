@@ -11,7 +11,7 @@ final boolean DRAW_SWAPS        = true;
  * "INSERTION_SORT", "BUBBLE_SORT_1", "BUBBLE_SORT_2", "SELECTION_SORT"
  */
 
-final String ALGORITHM = "BUBBLE_SORT_2";
+final String ALGORITHM = "SELECTION_SORT";
 
 float circleWidth;
 float circleRadius;
