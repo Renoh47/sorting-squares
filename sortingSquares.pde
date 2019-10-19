@@ -1,5 +1,5 @@
 // Parameters
-final int SQUARE_COUNT          = 100;
+final int SQUARE_COUNT          = 50;
 final int FADE_COUNT            = 10;
 final int MIN_SQUARE_SIZE       = 3;
 final int MAX_SQUARE_SIZE       = 100;
