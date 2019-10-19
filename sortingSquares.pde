@@ -11,7 +11,7 @@ final boolean DRAW_SWAPS        = true;
  * "INSERTION_SORT", "BUBBLE_SORT_1", "BUBBLE_SORT_2", "SELECTION_SORT"
  */
 
-final String ALGORITHM = "SELECTION_SORT";
+final String ALGORITHM = "BUBBLE_SORT_1";
 
 float circleWidth;
 float circleRadius;
@@ -230,7 +230,7 @@ SortableSquare[] copyAndCircularizeArray(SortableSquare[] source, int compA, int
 
 // Takes a screenshot of the sketch when any key is pressed. 
 void keyTyped() {
-  saveFrame();
+  saveFrame(ALGORITHM + "####.png");
 }
 
 // Debugging sorting algorithm implementations.
