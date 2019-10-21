@@ -12,16 +12,16 @@ final boolean DRAW_SWAPS        = true;
  * "INSERTION_SORT", "BUBBLE_SORT_1", "BUBBLE_SORT_2", "SELECTION_SORT"
  */
 
-final String ALGORITHM = "BUBBLE_SORT_1";
+final String ALGORITHM = "INSERTION_SORT";
 
 /* Data sets available:
  * random
  * already sorted
  * reverse sorted
- * user defined (maybe? not implemented)
+ * user defined (reads from userdata.txt)
  */
 
-final String DATA_SET = "USER";
+final String DATA_SET = "user";
 
 float circleWidth;
 float circleRadius;
@@ -106,6 +106,14 @@ void draw() {
 
 }
 
+void writeOutUserData(int[] sizeArray){
+  String[] lines = new String[sizeArray.length];
+  for (int i = 0; i < sizeArray.length; i++){
+    lines[i] = "" + sizeArray[i];
+  }
+  saveStrings("userdata.txt", lines);
+}
+
 // Populate the SortableSquare array with SortableSquare objects.
 void initSquares() {
   int sizeArray[] = new int[SQUARE_COUNT];
@@ -131,16 +139,24 @@ void initSquares() {
       break;
     case "user":
       // todo. fixed values for now.
-      for (int i = 0; i < SQUARE_COUNT; i++) {
-        sizeArray[i] = (MAX_SQUARE_SIZE + MIN_SQUARE_SIZE) / 2;
+      String[] lines = loadStrings("userdata.txt");
+      if (lines.length == SQUARE_COUNT){
+          for (int i = 0; i < SQUARE_COUNT; i++) {
+          sizeArray[i] = Integer.parseInt(lines[i]);  
+        }
+      }
+      else {
+        System.out.println("size of user data (" + lines.length + ") does not match number of squares (" + SQUARE_COUNT + ")" );
       }
       break;
     default:
       System.out.println("Invalid value for data set: " + DATA_SET);
+      exit();
       break;
   }
 
-  
+  // uncomment to write size list out to userdata.txt
+  // writeOutUserData(sizeArray);
   
   for(int i = 0; i < SQUARE_COUNT; i++) {
     int size = sizeArray[i];
