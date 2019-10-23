@@ -31,3 +31,4 @@ Processing requires all source files (*.pde*) to exist inside a *sketch folder* 
 ## Acknowledgement
 
 * **daggad95** - Inspiration
+* **Renoh47** - Added configurable data sets, color options
