@@ -7,11 +7,21 @@ final int OPACITY               = 140; // 0 transparent, 255 no opacity
 final int DELAY_BETWEEN_FRAMES  = 0; // Delay between animation frames, in millis
 final boolean DRAW_SWAPS        = true;
 
+
 /* Implemented: 
  * "INSERTION_SORT", "BUBBLE_SORT_1", "BUBBLE_SORT_2", "SELECTION_SORT"
  */
 
-final String ALGORITHM = "BUBBLE_SORT_1";
+final String ALGORITHM = "INSERTION_SORT";
+
+/* Data sets available:
+ * random
+ * already sorted
+ * reverse sorted
+ * user defined (reads from userdata.txt)
+ */
+
+final String DATA_SET = "user";
 
 float circleWidth;
 float circleRadius;
@@ -90,15 +100,66 @@ void draw() {
     }
     textSize(14);
     text(SQUARE_COUNT + " elements", 30, 60);
+    text("data set: " + DATA_SET.toLowerCase(), 30, 80);
   } 
   delay(DELAY_BETWEEN_FRAMES);
+
+}
+
+void writeOutUserData(int[] sizeArray){
+  String[] lines = new String[sizeArray.length];
+  for (int i = 0; i < sizeArray.length; i++){
+    lines[i] = "" + sizeArray[i];
+  }
+  saveStrings("userdata.txt", lines);
 }
 
 // Populate the SortableSquare array with SortableSquare objects.
 void initSquares() {
-  for(int i = 0; i < SQUARE_COUNT; i++) {
-    int size = (int) random(MIN_SQUARE_SIZE, MAX_SQUARE_SIZE);
+  int sizeArray[] = new int[SQUARE_COUNT];
+  
+  // Choose a set of sizes specified by DATA_SET
+  switch(DATA_SET.toLowerCase()) {
+    case "random":
+      for (int i = 0; i < SQUARE_COUNT; i++) {
+        sizeArray[i] = (int) random(MIN_SQUARE_SIZE, MAX_SQUARE_SIZE);
+      }
+      break;
+    case "sorted": 
+      // evenly distribute from min to max size.
+      for (int i = 0; i < SQUARE_COUNT; i++) {
+        sizeArray[i] = MIN_SQUARE_SIZE + (int)(((MAX_SQUARE_SIZE - MIN_SQUARE_SIZE)/(float)SQUARE_COUNT) * i);
+      }
+      break;
+    case "reverse":
+    // reverse of sorted. should provide some really lousy behavior for some searches. (N^2, yay!)
+      for (int i = 0; i < SQUARE_COUNT; i++) {
+        sizeArray[i] = MAX_SQUARE_SIZE - (int)(((MAX_SQUARE_SIZE - MIN_SQUARE_SIZE)/(float)SQUARE_COUNT) * i);
+      }
+      break;
+    case "user":
+      // todo. fixed values for now.
+      String[] lines = loadStrings("userdata.txt");
+      if (lines.length == SQUARE_COUNT){
+          for (int i = 0; i < SQUARE_COUNT; i++) {
+          sizeArray[i] = Integer.parseInt(lines[i]);  
+        }
+      }
+      else {
+        System.out.println("size of user data (" + lines.length + ") does not match number of squares (" + SQUARE_COUNT + ")" );
+      }
+      break;
+    default:
+      System.out.println("Invalid value for data set: " + DATA_SET);
+      exit();
+      break;
+  }
 
+  // uncomment to write size list out to userdata.txt
+  // writeOutUserData(sizeArray);
+  
+  for(int i = 0; i < SQUARE_COUNT; i++) {
+    int size = sizeArray[i];
     // TODO: square color as a function of square size
     PVector squareColor = new PVector(random(255), random(255), random(255));
     PVector squarePos = new PVector(0, 0); // value updated after entire list is generated
