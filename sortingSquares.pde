@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 // Parameters
 final int SQUARE_COUNT          = 50;
 final int FADE_COUNT            = 10;
@@ -12,16 +14,23 @@ final boolean DRAW_SWAPS        = true;
  * "INSERTION_SORT", "BUBBLE_SORT_1", "BUBBLE_SORT_2", "SELECTION_SORT"
  */
 
-final String ALGORITHM = "INSERTION_SORT";
+final String ALGORITHM = "BUBBLE_SORT_1";
 
 /* Data sets available:
- * random
- * already sorted
- * reverse sorted
- * user defined (reads from userdata.txt)
+ * RANDOM: random
+ * SORTED: already sorted
+ * REVERSE: reverse sorted
+ * USER: user defined (reads from userdata.txt)
  */
 
-final String DATA_SET = "user";
+final String DATA_SET = "random";
+
+/*
+ * Changes square coloring
+ * "random" : each square is random
+ * "gradient" : sorted squares form a gradient
+ */
+final String COLOR_STYLE = "gradient";
 
 float circleWidth;
 float circleRadius;
@@ -157,11 +166,36 @@ void initSquares() {
 
   // uncomment to write size list out to userdata.txt
   // writeOutUserData(sizeArray);
+
+  // Choose a starting hue value. this is used later in gradient
+  float startHue = random(1.0); //value >1.0 wraps around to zero.
+  float hueOffset = (random(1.0)> 0.5 ? 1.0 : -1.0) * random(0.2, 0.5); // offset to get to end hue. 
+  float sat = 1.0f;
+  float brightness = 0.80f;
+  
+  
   
   for(int i = 0; i < SQUARE_COUNT; i++) {
     int size = sizeArray[i];
-    // TODO: square color as a function of square size
-    PVector squareColor = new PVector(random(255), random(255), random(255));
+    PVector squareColor = new PVector();
+    switch(COLOR_STYLE.toLowerCase())
+    {
+      case "gradient":
+        // Get color based on size of square.
+        int range = MAX_SQUARE_SIZE - MIN_SQUARE_SIZE;
+        float normalizedSize = (size - MIN_SQUARE_SIZE)/(float)range; // size represented from 0 to 1.0, where 0 is min size and 1.0 is max size.
+        float hue = (startHue + normalizedSize * hueOffset) % 1.0; // get a hue from the normalized size and offset, mod to wrap around if needed.
+        Color rgbColor = Color.getHSBColor(hue, sat, brightness);
+        
+        squareColor = new PVector(rgbColor.getRed(), rgbColor.getGreen(), rgbColor.getBlue());
+        break;
+      case "random":
+        squareColor = new PVector(random(255), random(255), random(255));
+        break;
+      default:
+        System.out.println("Invalid color style: " + COLOR_STYLE);
+        exit();
+    }
     PVector squarePos = new PVector(0, 0); // value updated after entire list is generated
     boolean compared = false;
     SortableSquare square = new SortableSquare(size, squareColor, OPACITY, squarePos, compared);
