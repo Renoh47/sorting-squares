@@ -14,7 +14,7 @@ This project uses Processing 3, a Java-based programming language. More informat
 
 ### Installing
 
-Processing requires all source files (*.pde*) to exist inside a *sketch folder* somewhere on your machine. The name of the sketch folder must match the name of the source file. The only file required to run this sketch is *sortingSquares.pde* -- all source code exists in this file. Therefore the folder heirarchy should look like */sortingSquares/sortingSquares.pde*. After installing Processing, open the sketch folder within Processing and run the sketch.
+Processing requires all source files (*.pde*) to exist inside a *sketch folder* somewhere on your machine. The name of the sketch folder must match the name of the source file. The only file required to run this sketch is *sortingSquares.pde* -- all source code exists in this file. Therefore the folder heirarchy should look like ...*/sortingSquares/sortingSquares.pde*. After installing Processing, open the sketch folder within Processing and run the sketch.
 
 ## Examples
 
